@@ -579,7 +579,35 @@ def calculate_pecarn(age_months, gcs, altered_mental_status,
            low          → 'CT scan NOT recommended'
     """
     # TODO: Students — implement this function
-    raise NotImplementedError(
-        "calculate_pecarn() is not yet implemented. "
-        "Please implement this function according to the docstring."
+    if not (3 <= gcs <= 15):
+        raise ValueError("GCS must be between 3 and 15 inclusive.")
+    if age_months < 24:
+        if gcs < 15 or palpable_skull_fracture or altered_mental_status:
+            risk_level = 'high'
+            recommendation = 'CT scan recommended'
+        elif loss_of_consciousness or scalp_hematoma_location == 'non-frontal' or severe_mechanism or vomiting:
+            risk_level = 'intermediate'
+            recommendation = 'CT scan versus observation: individualise based on physician experience, multiple vs isolated findings, worsening symptoms, age < 3 months, parental preference'
+        else:
+            risk_level = 'low'
+            recommendation = 'CT scan NOT recommended'
+    else:
+        if gcs < 15 or signs_basal_skull_fracture or altered_mental_status:
+            risk_level = 'high'
+            recommendation = 'CT scan recommended'
+        elif loss_of_consciousness or vomiting or severe_mechanism or severe_headache:
+            risk_level = 'intermediate'
+            recommendation = 'CT scan versus observation: individualise based on physician experience, multiple vs isolated findings, worsening symptoms, age < 3 months, parental preference'
+        else:
+            risk_level = 'low'
+            recommendation = 'CT scan NOT recommended'
+    interpretation = (
+        f"PECARN Risk Level: {risk_level.upper()}. "
+        f"Recommendation: {recommendation}."
     )
+    return {
+        'risk_level': risk_level,
+        'recommendation': recommendation,
+        'interpretation': interpretation
+    }
+
