@@ -413,10 +413,32 @@ def calculate_heart_score(history, ecg, age_score, risk_factors, troponin):
          ``'interpretation'``.
     """
     # TODO: Students — implement this function
-    raise NotImplementedError(
-        "calculate_heart_score() is not yet implemented. "
-        "Please implement this function according to the docstring."
-    )
+    if not all(isinstance(param, int) and 0 <= param <= 2 for param in
+               [history, ecg, age_score, risk_factors, troponin]):
+        raise ValueError("All parameters must be integers with value 0, 1, or 2.")
+
+    total_score = history + ecg + age_score + risk_factors + troponin
+
+    if 0 <= total_score <= 3:
+        risk_level = 'low'
+    elif 4 <= total_score <= 6:
+        risk_level = 'moderate'
+    else:
+        risk_level = 'high'
+
+    # Build interpretation string based on risk level
+    if risk_level == 'low':
+        interpretation = "Consider early discharge."
+    elif risk_level == 'moderate':
+        interpretation = "Observe; serial troponins."
+    else:
+        interpretation = "Early invasive strategy."
+
+    return {
+        'score': total_score,
+        'risk_level': risk_level,
+        'interpretation': interpretation
+    }
 
 
 # =============================================================================
